@@ -20,7 +20,7 @@ namespace DataScriptLanguage
                 if (item.Name == name)
                     return item;
             Log.GetCoreLogger().Error("Could not find DataItem with name: {0}", name);
-            return null;
+            return new DataItem(name, false);
         }
 
         public static void Read(string path)
@@ -45,11 +45,21 @@ namespace DataScriptLanguage
                             if (item.GetName() == name)
                             {
                                 string d = s.Split(new char[] { ':' }, 2)[1];
-                                if (d.StartsWith(" "))
-                                    d = d.Substring(1, d.Length - 1);
                                 string[] data = Regex.Matches(d, @"[\""].+?[\""]|[^,]+")
                                     .Cast<Match>()
                                     .Select(m => m.Value.Replace("\"", "")).ToArray();
+
+                                for (int i = 0; i < data.Length; i++)
+                                {
+                                    string[] info = Regex.Matches(data[i], @"[${].+?[}]|[^ ]+")
+                                        .Cast<Match>()
+                                        .Select(m => 
+                                            m.Value.StartsWith("${") ? 
+                                            GetDataItem(m.Value.Substring(2, m.Value.Length - 3)).ToString() : m.Value
+                                        ).ToArray();
+                                    data[i] = string.Join(" ", info);
+                                }
+
                                 item.SetData(data);
                             }
                         }

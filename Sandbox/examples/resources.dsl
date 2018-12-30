@@ -5,8 +5,8 @@ style {
     }
 
     dialog {
-        title: "Test Dialog Title"
+        title: "${style.window.title} Dialog"
         show: true
-        color.background: 127,255,255
+        color.background: ${style.window.color.background}
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataScriptLanguage.DataTypes
 {
-    public abstract class DataItem
+    public class DataItem
     {
         public readonly string Name = "";
 
@@ -14,6 +14,13 @@ namespace DataScriptLanguage.DataTypes
         {
             Name = name;
             DataScript.AddDataItem(this);
+        }
+
+        internal DataItem(string name, bool addItem = false)
+        {
+            Name = name;
+            if (addItem)
+                DataScript.AddDataItem(this);
         }
 
         public virtual void SetData(string[] data)
