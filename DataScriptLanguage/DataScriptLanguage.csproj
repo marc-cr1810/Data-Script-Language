@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NLogger">
-      <HintPath>..\..\..\..\MEGA\Programming\C#\Logger\Logger\bin\Debug\NLogger.dll</HintPath>
+      <HintPath>lib\NLogger.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
