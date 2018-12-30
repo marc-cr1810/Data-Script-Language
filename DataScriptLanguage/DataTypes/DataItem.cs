@@ -19,9 +19,9 @@ namespace DataScriptLanguage.DataTypes
         public virtual void SetData(string[] data)
         { }
 
-        internal void Error(string msg)
+        internal void Error(string message, params object[] args)
         {
-            Log.GetCoreLogger().Error("{0} : {1}", Name, msg);
+            Log.GetCoreLogger().Error("{0} : {1}", Name, message);
         }
 
         public string GetName() { return Name; }

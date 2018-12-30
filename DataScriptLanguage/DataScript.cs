@@ -14,6 +14,15 @@ namespace DataScriptLanguage
         public static void AddDataItem(DataItem item) { Items.Add(item); }
         public static void RemoveDataItem(DataItem item) { Items.Remove(item); }
 
+        public static DataItem GetDataItem(string name)
+        {
+            foreach (DataItem item in Items)
+                if (item.Name == name)
+                    return item;
+            Log.GetCoreLogger().Error("Could not find DataItem with name: {0}", name);
+            return null;
+        }
+
         public static void Read(string path)
         {
             string[] lines = File.ReadAllText(path).Replace("\r", "").Split('\n');

@@ -1,11 +1,12 @@
 style {
     window {
         title: "Test Title"
-        background_color: 255,255,127
+        color.background: 255,255,127
     }
 
     dialog {
         title: "Test Dialog Title"
-        background_color: 127,255,255
+        show: true
+        color.background: 127,255,255
     }
 }
