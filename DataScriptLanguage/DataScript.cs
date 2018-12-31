@@ -66,10 +66,7 @@ namespace DataScriptLanguage
                                         for (i = i + 1; i < parts.Length; i++)
                                         {
                                             if (parts[i] == "]")
-                                            {
-                                                i++;
                                                 break;
-                                            }
                                             line += parts[i];
                                         }
                                     }
@@ -89,6 +86,7 @@ namespace DataScriptLanguage
                                 }
 
                                 item.SetData(data);
+                                break;
                             }
                         }
                     }

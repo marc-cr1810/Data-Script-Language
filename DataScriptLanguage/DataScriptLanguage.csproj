@@ -51,6 +51,7 @@
     <Compile Include="DataTypes\Bool.cs" />
     <Compile Include="DataTypes\Color.cs" />
     <Compile Include="DataTypes\DataItem.cs" />
+    <Compile Include="DataTypes\Number.cs" />
     <Compile Include="DataTypes\Text.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

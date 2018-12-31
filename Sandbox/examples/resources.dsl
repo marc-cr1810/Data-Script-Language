@@ -1,6 +1,10 @@
 style {
     window {
         title: "Test Title"
+        size: [
+            width: 600,
+            height: 400
+        ]
         color.background: 255, 255, 127
     }
 

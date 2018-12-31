@@ -7,6 +7,7 @@ namespace Sandbox
     public partial class Window : Form
     {
         private Text Title = new Text("style.window.title");
+        private Array<Number> WinSize = new Array<Number>("style.window.size");
         private Color ColorBackground = new Color("style.window.color.background");
 
         private Array<Text> ConsoleMessage = new Array<Text>("lang.console.messages");
@@ -20,6 +21,7 @@ namespace Sandbox
             DataScript.Read("../../examples/resources.dsl");
             
             Text = Title;
+            Size = new System.Drawing.Size(WinSize["width"], WinSize["height"]);
             BackColor = ColorBackground;
             
             System.Console.WriteLine(ConsoleMessage["first"]);
