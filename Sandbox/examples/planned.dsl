@@ -1,11 +1,19 @@
 style {
     window {
         title: "Test Title"
-        background_color: 255,255,127
+        color.background: 255, 255, 127
     }
 
     dialog {
-        title: "Test Dialog Title"
-        background_color: 127,255,255
+        title: "${style.window.title} Dialog"
+        show: true
+        color.background: ${style.window.color.background}
     }
+}
+
+lang {
+    console.messages: [
+        first: "First Message",
+        second: "Second Message"
+    ]
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataScriptLanguage.DataTypes
+﻿namespace DataScriptLanguage.DataTypes
 {
     public class Text : DataItem
     {
@@ -22,7 +16,7 @@ namespace DataScriptLanguage.DataTypes
             Value = text;
         }
 
-        public override void SetData(string[] data)
+        internal override void SetData(string[] data)
         {
             if (data.Length == 1)
                 Value = data[0];

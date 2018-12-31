@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataScriptLanguage.DataTypes
+﻿namespace DataScriptLanguage.DataTypes
 {
     public class DataItem
     {
@@ -23,15 +17,18 @@ namespace DataScriptLanguage.DataTypes
                 DataScript.AddDataItem(this);
         }
 
-        public virtual void SetData(string[] data)
+        internal virtual void SetData(string[] data)
         { }
+
+        internal void Warn(string message, params object[] args)
+        {
+            Log.GetCoreLogger().Warn("{0} : {1}", Name, message);
+        }
 
         internal void Error(string message, params object[] args)
         {
-            Log.GetCoreLogger().Error("{0} : {1}", Name, message);
+            Log.GetCoreLogger().Error("{0} : {1}", Name, string.Format(message, args));
         }
-
-        public string GetName() { return Name; }
 
         public override string ToString()
         {

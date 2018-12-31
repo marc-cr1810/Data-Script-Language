@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataScriptLanguage.DataTypes
+﻿namespace DataScriptLanguage.DataTypes
 {
     public class Bool : DataItem
     {
@@ -20,7 +14,7 @@ namespace DataScriptLanguage.DataTypes
             Value = boolean;
         }
 
-        public override void SetData(string[] data)
+        internal override void SetData(string[] data)
         {
             if (data.Length == 1)
             {

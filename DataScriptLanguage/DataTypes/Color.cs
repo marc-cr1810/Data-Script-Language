@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataScriptLanguage.DataTypes
+﻿namespace DataScriptLanguage.DataTypes
 {
     public class Color : DataItem
     {
@@ -42,7 +36,7 @@ namespace DataScriptLanguage.DataTypes
             SetData(r, b, b, a);
         }
         
-        public override void SetData(string[] data)
+        internal override void SetData(string[] data)
         {
             if (data.Length == 1)
             {
@@ -71,7 +65,7 @@ namespace DataScriptLanguage.DataTypes
             else Error("Invalid color arguments");
         }
 
-        public void SetData(string hex)
+        internal void SetData(string hex)
         {
             System.Drawing.Color color = System.Drawing.ColorTranslator.FromHtml(hex);
             A = color.A;
@@ -80,7 +74,7 @@ namespace DataScriptLanguage.DataTypes
             B = color.B;
         }
 
-        public void SetData(int r, int g, int b, int a = 255)
+        internal void SetData(int r, int g, int b, int a = 255)
         {
             A = a;
             R = r;

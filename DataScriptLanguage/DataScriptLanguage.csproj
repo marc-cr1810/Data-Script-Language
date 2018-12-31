@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataScript.cs" />
+    <Compile Include="DataTypes\Array.cs" />
     <Compile Include="DataTypes\Bool.cs" />
     <Compile Include="DataTypes\Color.cs" />
     <Compile Include="DataTypes\DataItem.cs" />

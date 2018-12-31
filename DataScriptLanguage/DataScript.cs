@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -16,6 +15,11 @@ namespace DataScriptLanguage
 
         public static DataItem GetDataItem(string name)
         {
+            if (name == "")
+            {
+                Log.GetCoreLogger().Warn("Specify a name of a DataItem");
+                return new DataItem(name, false);
+            }
             foreach (DataItem item in Items)
                 if (item.Name == name)
                     return item;
@@ -39,10 +43,11 @@ namespace DataScriptLanguage
                         group.RemoveAt(group.Count - 1);
                     else
                     {
-                        foreach (DataItem item in Items)
+                        for (int j = 0; j < Items.Count; j++)
                         {
+                            DataItem item = Items[j];
                             string name = string.Join(".", group) + (group.Count > 0 ? "." : "") + s.Split(new char[] { ':' }, 2)[0];
-                            if (item.GetName() == name)
+                            if (item.Name == name)
                             {
                                 string d = s.Split(new char[] { ':' }, 2)[1];
                                 string[] data = Regex.Matches(d, @"[\""].+?[\""]|[^,]+")
