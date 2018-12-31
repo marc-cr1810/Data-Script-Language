@@ -59,8 +59,9 @@ namespace DataScriptLanguage
                             {
                                 if (line.Split(new char[] { ':' }, 2, System.StringSplitOptions.RemoveEmptyEntries).Length == 1)
                                 {
-                                    if (parts[++i] == "[")
+                                    if (parts[i + 1] == "[")
                                     {
+                                        i++;
                                         line += " ";
                                         for (i = i + 1; i < parts.Length; i++)
                                         {
@@ -71,6 +72,11 @@ namespace DataScriptLanguage
                                             }
                                             line += parts[i];
                                         }
+                                    }
+                                    else
+                                    {
+                                        Log.GetCoreLogger().Warn("No value assigned to {1}", path, name);
+                                        break;
                                     }
                                 }
                                 string d = line.Split(new char[] { ':' }, 2)[1];
