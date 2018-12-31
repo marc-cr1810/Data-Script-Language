@@ -12,5 +12,9 @@ style {
 }
 
 lang {
-    console.messages: first: "First Message",  second: "Second Message", third: "Third Message"
+    console.messages: [
+        first: "First Message",
+        second: "Second Message",
+        third: "Third Message"
+    ]
 }

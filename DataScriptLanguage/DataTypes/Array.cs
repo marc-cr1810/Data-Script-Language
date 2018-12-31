@@ -33,22 +33,14 @@ namespace DataScriptLanguage.DataTypes
                 if (s.Contains(":"))
                 {
                     name = s.Split(new char[] { ':' }, 2)[0];
-
                     v = s.Split(new char[] { ':' }, 2)[1];
                 }
-                string[] value = Regex.Matches(v, @"[\""].+?[\""]|[^,]+")
-                    .Cast<Match>()
-                    .Select(m => m.Value.Replace("\"", "")).ToArray();
-
-                for (int i = 0; i < value.Length; i++)
+                string[] value = Regex.Split(v, @",(?=(?:[^\""]*\""[^\""]*\"")*[^\""]*$)").Select(p => p.Trim().Replace("\"", "")).ToArray();
+                
+                for (int k = 0; k < data.Length; k++)
                 {
-                    string[] info = Regex.Matches(value[i], @"[${].+?[}]|[^ ]+")
-                        .Cast<Match>()
-                        .Select(m =>
-                            m.Value.StartsWith("${") ?
-                            DataScript.GetDataItem(m.Value.Substring(2, m.Value.Length - 3)).ToString() : m.Value
-                        ).ToArray();
-                    value[i] = string.Join(" ", info);
+                    foreach (Match m in Regex.Matches(data[k], @"(?<=\$){(.+?)}"))
+                        data[k] = data[k].Replace("$" + m.Value, DataScript.GetDataItem(m.Value.Substring(1, m.Value.Length - 2)).ToString());
                 }
 
                 T item = (T)Activator.CreateInstance(typeof(T), new object[] { name });

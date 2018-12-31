@@ -29,46 +29,68 @@ namespace DataScriptLanguage
 
         public static void Read(string path)
         {
-            string[] lines = File.ReadAllText(path).Replace("\r", "").Split('\n');
-
+            string[] parts = Regex.Split(File.ReadAllText(path), @"(?<!\$)([{])|(?<!\S)([}])|([\[\]])").Select(p => p.Trim()).ToArray();
             List<string> group = new List<string>();
-            foreach (string line in lines)
+
+            for (int i = 0; i < parts.Length; i++)
             {
-                string s = line.Trim();
-                if (!s.StartsWith("//") && s.Length > 0)
+                string s = parts[i];
+                if (string.IsNullOrEmpty(s))
+                    continue;
+
+                if (!s.Contains(":") && !s.Contains(" ") && parts[i + 1] == "{")
                 {
-                    if (!s.Contains(":") && !s.Contains("}"))
-                        group.Add(s.Split(new char[] { ' ' }, 2)[0]);
-                    else if (s == "}")
-                        group.RemoveAt(group.Count - 1);
-                    else
+                    group.Add(s);
+                    i++;
+                }
+                else if (s == "}")
+                    group.RemoveAt(group.Count - 1);
+                else if (s.Contains(":"))
+                {
+                    string[] lines = s.Replace("\r", "").Split(new char[] { '\n' }).Select(p => p.Trim()).ToArray();
+                    for (int h = 0; h < lines.Length; h++)
                     {
+                        string line = lines[h];
                         for (int j = 0; j < Items.Count; j++)
                         {
                             DataItem item = Items[j];
-                            string name = string.Join(".", group) + (group.Count > 0 ? "." : "") + s.Split(new char[] { ':' }, 2)[0];
+                            string name = string.Join(".", group) + (group.Count > 0 ? "." : "") + line.Split(new char[] { ':' }, 2)[0];
                             if (item.Name == name)
                             {
-                                string d = s.Split(new char[] { ':' }, 2)[1];
-                                string[] data = Regex.Matches(d, @"[\""].+?[\""]|[^,]+")
-                                    .Cast<Match>()
-                                    .Select(m => m.Value.Replace("\"", "")).ToArray();
-
-                                for (int i = 0; i < data.Length; i++)
+                                if (line.Split(new char[] { ':' }, 2, System.StringSplitOptions.RemoveEmptyEntries).Length == 1)
                                 {
-                                    string[] info = Regex.Matches(data[i], @"[${].+?[}]|[^ ]+")
-                                        .Cast<Match>()
-                                        .Select(m => 
-                                            m.Value.StartsWith("${") ? 
-                                            GetDataItem(m.Value.Substring(2, m.Value.Length - 3)).ToString() : m.Value
-                                        ).ToArray();
-                                    data[i] = string.Join(" ", info);
+                                    if (parts[++i] == "[")
+                                    {
+                                        line += " ";
+                                        for (i = i + 1; i < parts.Length; i++)
+                                        {
+                                            if (parts[i] == "]")
+                                            {
+                                                i++;
+                                                break;
+                                            }
+                                            line += parts[i];
+                                        }
+                                    }
+                                }
+                                string d = line.Split(new char[] { ':' }, 2)[1];
+                                string[] data = Regex.Split(d, @",(?=(?:[^\""]*\""[^\""]*\"")*[^\""]*$)").Select(p => p.Trim().Replace("\"", "")).ToArray();
+
+                                for (int k = 0; k < data.Length; k++)
+                                {
+                                    foreach (Match m in Regex.Matches(data[k], @"(?<=\$){(.+?)}"))
+                                        data[k] = data[k].Replace("$" + m.Value, GetDataItem(m.Value.Substring(1, m.Value.Length - 2)).ToString());
                                 }
 
                                 item.SetData(data);
                             }
                         }
                     }
+                }
+                else
+                {
+                    Log.GetCoreLogger().Error("Failed to read file ({0})", path);
+                    return;
                 }
             }
         }
