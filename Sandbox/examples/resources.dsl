@@ -5,7 +5,7 @@ style {
             width: 600,
             height: 400
         ]
-        color.background: 255, 255, 127
+        color.background: <?200 + 55>, 255, 127
     }
 
     dialog {

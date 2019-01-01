@@ -82,7 +82,13 @@ namespace DataScriptLanguage
                                 for (int k = 0; k < data.Length; k++)
                                 {
                                     foreach (Match m in Regex.Matches(data[k], @"(?<=\$){(.+?)}"))
-                                        data[k] = data[k].Replace("$" + m.Value, GetDataItem(m.Value.Substring(1, m.Value.Length - 2)).ToString());
+                                        data[k] = data[k].Replace("${" + m.Groups[1].Value + "}", GetDataItem(m.Groups[1].Value).ToString());
+                                }
+
+                                for (int k = 0; k < data.Length; k++)
+                                {
+                                    foreach (Match m in Regex.Matches(data[k], @"(?<=\<)\?(.+?)>"))
+                                        data[k] = data[k].Replace("<?" + m.Groups[1].Value + ">", CalculateExpression(m.Groups[1].Value));
                                 }
 
                                 item.SetData(data);
@@ -97,6 +103,96 @@ namespace DataScriptLanguage
                     return;
                 }
             }
+        }
+
+        internal static string CalculateExpression(string expression)
+        {
+            List<string> RPN = new List<string>();
+            Stack<string> operatorStack = new Stack<string>();
+            foreach (Match m in Regex.Matches(expression, @"(-?)([\w])+|(-?)([\d])+|([\+\-\*\/\^\(\)])"))
+            {
+                string token = m.Value;
+                if (token == "(" || token == ")" || 
+                    token == "+" || token == "-" ||
+                    token == "*" || token == "/" || token == "^")
+                {
+                    if (token == "(")
+                    {
+                        operatorStack.Push(token);
+                        continue;
+                    }
+                    else if (token == "^")
+                    {
+                        operatorStack.Push(token);
+                        continue;
+                    }
+                    else if (token == "*" || token == "/")
+                    {
+                        while (operatorStack.Count > 0 &&
+                            operatorStack.Peek() != "+" && operatorStack.Peek() != "-" &&
+                            operatorStack.Peek() != "(")
+                            RPN.Add(operatorStack.Pop());
+                        operatorStack.Push(token);
+                        continue;
+                    }
+                    else if (token == "+" || token == "-")
+                    {
+                        while (operatorStack.Count > 0 && operatorStack.Peek() != "(")
+                            RPN.Add(operatorStack.Pop());
+                        operatorStack.Push(token);
+                        continue;
+                    }
+                    else if (token == ")")
+                    {
+                        while (operatorStack.Count > 0 && operatorStack.Peek() != "(")
+                            RPN.Add(operatorStack.Pop());
+                        operatorStack.Pop();
+                        continue;
+                    }
+                }
+                else
+                {
+                    RPN.Add(token);
+                    continue;
+                }
+            }
+            while (operatorStack.Count > 0)
+                RPN.Add(operatorStack.Pop());
+
+            Stack<double> stack = new Stack<double>();
+            foreach (string token in RPN)
+            {
+                if (token == "+" || token == "-" ||
+                    token == "*" || token == "/" || token == "^")
+                {
+                    double right = stack.Pop();
+                    double left = stack.Pop();
+                    switch (token)
+                    {
+                        case "+":
+                            stack.Push(left + right);
+                            break;
+                        case "-":
+                            stack.Push(left - right);
+                            break;
+                        case "*":
+                            stack.Push(left * right);
+                            break;
+                        case "/":
+                            stack.Push(left / right);
+                            break;
+                        case "^":
+                            stack.Push(System.Math.Pow(left, right));
+                            break;
+                    }
+                }
+                else
+                {
+                    stack.Push(double.Parse(token));
+                }
+            }
+
+            return stack.Pop().ToString();
         }
     }
 }
