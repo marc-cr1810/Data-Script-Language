@@ -11,7 +11,7 @@ style {
     dialog {
         title: "${style.window.title} Dialog"
         show: true
-        color.background: ${style.window.color.background}
+        color.background: ${style.window.color.background->B}, ${style.window.color.background->G}, ${style.window.color.background->R}
     }
 }
 

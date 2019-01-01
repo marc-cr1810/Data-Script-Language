@@ -20,6 +20,7 @@ namespace DataScriptLanguage.DataTypes
 
         internal override void SetData(string[] data)
         {
+            DataItems.Clear();
             if (!typeof(T).IsSubclassOf(typeof(DataItem)))
             {
                 Error("Cannot set data as {0} is not a type of DataItem", typeof(T).ToString());
@@ -47,7 +48,13 @@ namespace DataScriptLanguage.DataTypes
         internal override string GetData(string data)
         {
             string d = data.ToLower();
-            return "";
+            if (d == "value")
+                return ToString();
+            else
+            {
+                Error("Unknown data value ({0})", data);
+                return Name;
+            }
         }
 
         public T this[int index] {
@@ -87,6 +94,17 @@ namespace DataScriptLanguage.DataTypes
                 DataScript.RemoveDataItem(dItem as DataItem);
                 return dItem;
             }
+        }
+
+        public override string ToString()
+        {
+            string output = "([";
+            for (int i = 0; i < DataItems.Count; i++)
+                if (i == DataItems.Count - 1)
+                    output += (DataItems[i] as DataItem).Name + ":" + (DataItems[i] as DataItem);
+                else
+                    output += (DataItems[i] as DataItem).Name + ":" + (DataItems[i] as DataItem) + ", ";
+            return output + "])";
         }
     }
 }
