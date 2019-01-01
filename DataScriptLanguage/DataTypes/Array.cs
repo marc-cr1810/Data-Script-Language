@@ -43,6 +43,12 @@ namespace DataScriptLanguage.DataTypes
                         data[k] = data[k].Replace("$" + m.Value, DataScript.GetDataItem(m.Value.Substring(1, m.Value.Length - 2)).ToString());
                 }
 
+                for (int k = 0; k < data.Length; k++)
+                {
+                    foreach (Match m in Regex.Matches(data[k], @"(?<=\<)\?(.+?)>"))
+                        data[k] = data[k].Replace("<?" + m.Groups[1].Value + ">", DataScript.CalculateExpression(m.Groups[1].Value));
+                }
+
                 T item = (T)Activator.CreateInstance(typeof(T), new object[] { name });
                 DataScript.RemoveDataItem(item as DataItem);
                 (item as DataItem).SetData(value);
