@@ -22,8 +22,8 @@ objects {
             y: 15
         ]
         size: [
-            width: <?${style.window.size["width"]} - 15>,
-            height: <?${style.window.size["height"]} - 15>
+            width: <?${style.window.size("width")} - 15>,
+            height: <?${style.window.size("height")} - 15>
         ]
         color: 127, 255, 127
     }

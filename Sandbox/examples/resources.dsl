@@ -11,7 +11,7 @@ style {
     dialog {
         title: "${style.window.title} Dialog"
         size: [
-            width: 480,
+            width: ${style.window.size("width")},
             height: 300
         ]
         show: true

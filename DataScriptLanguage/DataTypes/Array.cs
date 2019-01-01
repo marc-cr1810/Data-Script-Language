@@ -53,6 +53,16 @@ namespace DataScriptLanguage.DataTypes
                 return Name;
             }
 
+            if (data.StartsWith("("))
+            {
+
+                foreach (T dataItem in DataItems)
+                {
+                    DataItem item = dataItem as DataItem;
+                    if (item.Name == Regex.Match(data, @"((?<=\()[\w]+?(?=\)))").Value)
+                        return (dataItem as DataItem).ToString();
+                }
+            }
             string d = data.ToLower();
             if (d == "value")
                 return ToString();
