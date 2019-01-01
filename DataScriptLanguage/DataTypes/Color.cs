@@ -56,13 +56,26 @@
             }
             else if (data.Length == 4)
             {
-                int a = int.Parse(data[0]);
-                int r = int.Parse(data[1]);
-                int g = int.Parse(data[2]);
-                int b = int.Parse(data[3]);
+                int r = int.Parse(data[0]);
+                int g = int.Parse(data[1]);
+                int b = int.Parse(data[2]);
+                int a = int.Parse(data[3]);
                 SetData(r, g, b, a);
             }
-            else Error("Invalid color arguments");
+            else
+            {
+                if (data.Length > 4)
+                {
+                    string errMsg = "To many arguments ([R:{0}, G:{1}, B:{2}, A:{3}, ";
+                    for (int i = 4; i < data.Length; i++)
+                        if (i == data.Length - 1)
+                            errMsg += "?:{" + i.ToString() + "}])";
+                        else
+                            errMsg += "?:{" + i.ToString() + "}, ";
+                    Error(errMsg, data);
+                }
+                Error("Invalid color arguments");
+            }
         }
 
         internal void SetData(string hex)

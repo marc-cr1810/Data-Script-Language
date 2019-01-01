@@ -27,6 +27,20 @@ namespace DataScriptLanguage
             return new DataItem(name, false);
         }
 
+        internal static string GetDataItemValue(string name)
+        {
+            if (name == "")
+            {
+                Log.GetCoreLogger().Warn("Specify a name of a DataItem");
+                return name;
+            }
+            foreach (DataItem item in Items)
+                if (item.Name == name)
+                    return item.ToString();
+            Log.GetCoreLogger().Error("Could not find DataItem with name: {0}", name);
+            return name;
+        }
+
         public static void Read(string path)
         {
             string[] parts = Regex.Split(File.ReadAllText(path), @"(?<!\$)([{])|(?<!\S)([}])|([\[\]])").Select(p => p.Trim()).ToArray();
@@ -82,7 +96,7 @@ namespace DataScriptLanguage
                                 for (int k = 0; k < data.Length; k++)
                                 {
                                     foreach (Match m in Regex.Matches(data[k], @"(?<=\$){(.+?)}"))
-                                        data[k] = data[k].Replace("${" + m.Groups[1].Value + "}", GetDataItem(m.Groups[1].Value).ToString());
+                                        data[k] = data[k].Replace("${" + m.Groups[1].Value + "}", GetDataItemValue(m.Groups[1].Value).ToString());
                                 }
 
                                 for (int k = 0; k < data.Length; k++)
