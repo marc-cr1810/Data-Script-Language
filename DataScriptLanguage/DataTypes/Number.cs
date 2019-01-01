@@ -69,6 +69,12 @@
 
         internal override string GetData(string data)
         {
+            if (data.StartsWith("("))
+            {
+                Error("This is not an Array DataItem");
+                return Name;
+            }
+
             string d = data.ToLower();
             if (d == "value")
                 return ToString();
