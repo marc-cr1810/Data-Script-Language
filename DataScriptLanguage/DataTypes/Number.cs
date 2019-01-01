@@ -67,6 +67,18 @@
                 Error("Invalid number arguments");
         }
 
+        internal override string GetData(string data)
+        {
+            string d = data.ToLower();
+            if (d == "value")
+                return ToString();
+            else
+            {
+                Error("Unknown data value ({0})", data);
+                return Name;
+            }
+        }
+
         public static implicit operator int(Number n)
         {
             return (n.Type == NumberType.Int) ? n.ValueInt :

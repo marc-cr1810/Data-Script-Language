@@ -44,6 +44,12 @@ namespace DataScriptLanguage.DataTypes
             }
         }
 
+        internal override string GetData(string data)
+        {
+            string d = data.ToLower();
+            return "";
+        }
+
         public T this[int index] {
             get
             {

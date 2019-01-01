@@ -34,6 +34,12 @@ namespace DataScriptLanguage
                 Log.GetCoreLogger().Warn("Specify a name of a DataItem");
                 return name;
             }
+            if (Regex.Match(name, @"([\w.]+?(->)\w+)").Success)
+            {
+                foreach (DataItem item in Items)
+                    if (item.Name == name.Split(new[] { "->" }, System.StringSplitOptions.None)[0])
+                        return item.GetData(name.Split(new[] { "->" }, System.StringSplitOptions.None)[1]);
+            }
             foreach (DataItem item in Items)
                 if (item.Name == name)
                     return item.ToString();

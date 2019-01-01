@@ -95,6 +95,26 @@
             B = b;
         }
 
+        internal override string GetData(string data)
+        {
+            string d = data.ToLower();
+            if (d == "value")
+                return ToString();
+            else if (d == "r" || d == "red")
+                return R.ToString();
+            else if (d == "g" || d == "green")
+                return G.ToString();
+            else if (d == "b" || d == "blue")
+                return B.ToString();
+            else if (d == "a" || d == "alpha")
+                return A.ToString();
+            else
+            {
+                Error("Unknown data value ({0})", data);
+                return Name;
+            }
+        }
+
         public static implicit operator System.Drawing.Color(Color color)
         {
             return System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B);

@@ -48,6 +48,18 @@
                 Error("Invalid text arguments");
         }
 
+        internal override string GetData(string data)
+        {
+            string d = data.ToLower();
+            if (d == "value")
+                return ToString();
+            else
+            {
+                Error("Unknown data value ({0})", data);
+                return Name;
+            }
+        }
+
         public static implicit operator bool(Bool t)
         {
             return t.Value;
