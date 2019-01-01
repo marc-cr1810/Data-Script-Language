@@ -71,31 +71,32 @@ namespace DataScriptLanguage
                     for (int h = 0; h < lines.Length; h++)
                     {
                         string line = lines[h];
+                        string name = string.Join(".", group) + (group.Count > 0 ? "." : "") + line.Split(new char[] { ':' }, 2)[0];
                         for (int j = 0; j < Items.Count; j++)
                         {
-                            DataItem item = Items[j];
-                            string name = string.Join(".", group) + (group.Count > 0 ? "." : "") + line.Split(new char[] { ':' }, 2)[0];
-                            if (item.Name == name)
+                            if (line.Split(new char[] { ':' }, 2, System.StringSplitOptions.RemoveEmptyEntries).Length == 1)
                             {
-                                if (line.Split(new char[] { ':' }, 2, System.StringSplitOptions.RemoveEmptyEntries).Length == 1)
+                                if (parts[i + 1] == "[")
                                 {
-                                    if (parts[i + 1] == "[")
+                                    i++;
+                                    line += " ";
+                                    for (i = i + 1; i < parts.Length; i++)
                                     {
-                                        i++;
-                                        line += " ";
-                                        for (i = i + 1; i < parts.Length; i++)
-                                        {
-                                            if (parts[i] == "]")
-                                                break;
-                                            line += parts[i];
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Log.GetCoreLogger().Warn("No value assigned to {1}", path, name);
-                                        break;
+                                        if (parts[i] == "]")
+                                            break;
+                                        line += parts[i];
                                     }
                                 }
+                                else
+                                {
+                                    Log.GetCoreLogger().Warn("No value assigned to {1}", path, name);
+                                    break;
+                                }
+                            }
+
+                            DataItem item = Items[j];
+                            if (item.Name == name)
+                            {
                                 string d = line.Split(new char[] { ':' }, 2)[1];
                                 string[] data = Regex.Split(d, @",(?=(?:[^\""]*\""[^\""]*\"")*[^\""]*$)").Select(p => p.Trim().Replace("\"", "")).ToArray();
 
@@ -103,14 +104,10 @@ namespace DataScriptLanguage
                                 {
                                     foreach (Match m in Regex.Matches(data[k], @"(?<=\$){(.+?)}"))
                                         data[k] = data[k].Replace("${" + m.Groups[1].Value + "}", GetDataItemValue(m.Groups[1].Value).ToString());
-                                }
 
-                                for (int k = 0; k < data.Length; k++)
-                                {
                                     foreach (Match m in Regex.Matches(data[k], @"(?<=\<)\?(.+?)>"))
                                         data[k] = data[k].Replace("<?" + m.Groups[1].Value + ">", CalculateExpression(m.Groups[1].Value));
                                 }
-
                                 item.SetData(data);
                                 break;
                             }

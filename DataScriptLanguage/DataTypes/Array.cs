@@ -47,6 +47,12 @@ namespace DataScriptLanguage.DataTypes
 
         internal override string GetData(string data)
         {
+            if (!typeof(T).IsSubclassOf(typeof(DataItem)))
+            {
+                Error("Cannot get data as {0} is not a type of DataItem", typeof(T).ToString());
+                return Name;
+            }
+
             string d = data.ToLower();
             if (d == "value")
                 return ToString();
@@ -98,6 +104,12 @@ namespace DataScriptLanguage.DataTypes
 
         public override string ToString()
         {
+            if (!typeof(T).IsSubclassOf(typeof(DataItem)))
+            {
+                Error("Cannot get value as {0} is not a type of DataItem", typeof(T).ToString());
+                return Name;
+            }
+
             string output = "([";
             for (int i = 0; i < DataItems.Count; i++)
                 if (i == DataItems.Count - 1)

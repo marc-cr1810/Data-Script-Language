@@ -10,6 +10,10 @@ style {
 
     dialog {
         title: "${style.window.title} Dialog"
+        size: [
+            width: 480,
+            height: 300
+        ]
         show: true
         color.background: ${style.window.color.background->B}, ${style.window.color.background->G}, ${style.window.color.background->R}
     }

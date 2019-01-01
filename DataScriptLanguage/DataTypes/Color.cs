@@ -66,15 +66,16 @@
             {
                 if (data.Length > 4)
                 {
-                    string errMsg = "To many arguments ([R:{0}, G:{1}, B:{2}, A:{3}, ";
+                    string errMsg = "To many arguments ([R<-{0}, G<-{1}, B<-{2}, A<-{3}, ";
                     for (int i = 4; i < data.Length; i++)
                         if (i == data.Length - 1)
-                            errMsg += "?:{" + i.ToString() + "}])";
+                            errMsg += "?<-{" + i.ToString() + "}])";
                         else
-                            errMsg += "?:{" + i.ToString() + "}, ";
+                            errMsg += "?<-{" + i.ToString() + "}, ";
                     Error(errMsg, data);
                 }
-                Error("Invalid color arguments");
+                else
+                    Error("Invalid color arguments");
             }
         }
 
