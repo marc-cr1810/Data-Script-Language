@@ -5,6 +5,7 @@ style {
             width: 600,
             height: 400
         ]
+        resizeable: false
         color.background: 255, 255, 127
     }
 

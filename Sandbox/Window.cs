@@ -8,6 +8,7 @@ namespace Sandbox
     {
         private Text Title = new Text("style.window.title");
         private Array<Number> WinSize = new Array<Number>("style.window.size");
+        private Bool Resizeable = new Bool("style.window.resizeable");
         private Color ColorBackground = new Color("style.window.color.background");
 
         private Array<Text> ConsoleMessage = new Array<Text>("lang.console.messages");
@@ -23,6 +24,8 @@ namespace Sandbox
             Text = Title;
             Size = new System.Drawing.Size(WinSize["width"], WinSize["height"]);
             BackColor = ColorBackground;
+            FormBorderStyle = (Resizeable ? FormBorderStyle.Sizable : FormBorderStyle.Fixed3D);
+            MaximizeBox = Resizeable;
             
             System.Console.WriteLine(ConsoleMessage["first"]);
             System.Console.WriteLine(ConsoleMessage["second"]);
