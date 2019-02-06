@@ -87,11 +87,18 @@ namespace DataScriptLanguage
                                 {
                                     i++;
                                     line += " ";
+                                    int level = 0;
                                     for (i = i + 1; i < parts.Length; i++)
                                     {
+                                        if (parts[i] == "[")
+                                            level++;
                                         if (parts[i] == "]")
-                                            break;
-                                        line += parts[i];
+                                        {
+                                            if (level == 0)
+                                                break;
+                                            level--;
+                                        }
+                                        line += (level > 0 ? Regex.Replace(parts[i], @",(?=(?:[^\""]*\""[^\""]*\"")*[^\""]*$)", "|") : parts[i]);
                                     }
                                 }
                                 else

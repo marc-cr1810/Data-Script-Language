@@ -27,8 +27,12 @@ namespace DataScriptLanguage.DataTypes
                 return;
             }
 
-            foreach (string s in data)
+            for (int i = 0; i < data.Length; i++)
             {
+                string s = data[i];
+                if (s.StartsWith("[") && s.EndsWith("]"))
+                    s = ":" + EvaluateArrayReadValue(s);
+
                 string name = "";
                 string v = s;
                 if (s.Contains(":"))
@@ -36,7 +40,21 @@ namespace DataScriptLanguage.DataTypes
                     name = s.Split(new char[] { ':' }, 2)[0];
                     v = s.Split(new char[] { ':' }, 2)[1];
                 }
+                if (v.StartsWith("[") && v.EndsWith("]"))
+                    v = EvaluateArrayReadValue(v);
+
                 string[] value = Regex.Split(v, @",(?=(?:[^\""]*\""[^\""]*\"")*[^\""]*$)").Select(p => p.Trim().Replace("\"", "")).ToArray();
+
+                if (name != "")
+                    foreach (T dataItem in DataItems)
+                    {
+                        DataItem itm = dataItem as DataItem;
+                        if (itm.Name == name)
+                        {
+                            Error("Duplicate value name of \"{0}\" at {1}({2}), leaving as a nameless value", name, Name, i);
+                            name = "";
+                        }
+                    }
 
                 T item = (T)Activator.CreateInstance(typeof(T), new object[] { name });
                 DataScript.RemoveDataItem(item as DataItem);
@@ -74,6 +92,39 @@ namespace DataScriptLanguage.DataTypes
                 Error("Unknown data value ({0})", data);
                 return Name;
             }
+        }
+
+        private string EvaluateArrayReadValue(string value)
+        {
+            string[] parts = Regex.Split(value, @"([\[\]])").Select(p => p.Trim()).ToArray();
+            string line = "";
+            for (int i = 0; i < parts.Length;)
+            {
+                if (parts[i + 1] == "[")
+                {
+                    i++;
+                    line += " ";
+                    int level = 0;
+                    for (i = i + 1; i < parts.Length; i++)
+                    {
+                        if (parts[i] == "[")
+                            level++;
+                        if (parts[i] == "]")
+                        {
+                            if (level == 0)
+                                return line;
+                            level--;
+                        }
+                        line += (level > 0 ? Regex.Replace(parts[i].Trim(), @",(?=(?:[^\""]*\""[^\""]*\"")*[^\""]*$)", "|") : parts[i].Replace("|", ",").Trim());
+                    }
+                }
+                else
+                {
+                    Warn("No value assigned");
+                    break;
+                }
+            }
+            return line;
         }
 
         public T this[int index] {
@@ -126,9 +177,9 @@ namespace DataScriptLanguage.DataTypes
             string output = "([";
             for (int i = 0; i < DataItems.Count; i++)
                 if (i == DataItems.Count - 1)
-                    output += (DataItems[i] as DataItem).Name + ":" + (DataItems[i] as DataItem);
+                    output += ((DataItems[i] as DataItem).Name.Length > 0 ? (DataItems[i] as DataItem).Name + ":" : "") + (DataItems[i] as DataItem);
                 else
-                    output += (DataItems[i] as DataItem).Name + ":" + (DataItems[i] as DataItem) + ", ";
+                    output += ((DataItems[i] as DataItem).Name.Length > 0 ? (DataItems[i] as DataItem).Name + ":" : "") + (DataItems[i] as DataItem) + ", ";
             return output + "])";
         }
     }
