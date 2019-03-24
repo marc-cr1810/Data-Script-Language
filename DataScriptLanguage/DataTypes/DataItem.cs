@@ -17,7 +17,7 @@
                 DataScript.AddDataItem(this);
         }
 
-        internal virtual void SetData(string[] data)
+        public virtual void SetData(string[] data)
         { }
 
         internal virtual string GetData(string data)
@@ -43,12 +43,12 @@
             return Name;
         }
 
-        internal void Warn(string message, params object[] args)
+        protected void Warn(string message, params object[] args)
         {
             Log.GetCoreLogger().Warn("{0} : {1}", Name, message);
         }
 
-        internal void Error(string message, params object[] args)
+        protected void Error(string message, params object[] args)
         {
             Log.GetCoreLogger().Error("{0} : {1}", Name, string.Format(message, args));
         }

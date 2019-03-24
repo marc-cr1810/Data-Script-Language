@@ -14,7 +14,7 @@
             Value = boolean;
         }
 
-        internal override void SetData(string[] data)
+        public override void SetData(string[] data)
         {
             if (data.Length == 1)
             {

@@ -18,7 +18,7 @@ namespace DataScriptLanguage.DataTypes
                 Error("{0} is not a type of DataItem", typeof(T).ToString());
         }
 
-        internal override void SetData(string[] data)
+        public override void SetData(string[] data)
         {
             DataItems.Clear();
             if (!typeof(T).IsSubclassOf(typeof(DataItem)))
