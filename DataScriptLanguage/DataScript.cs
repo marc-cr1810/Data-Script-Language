@@ -104,7 +104,7 @@ namespace DataScriptLanguage
                                 else if (parts[i + 1] == "{")
                                 {
                                     i++;
-                                    string groupName = name.Split('.')[group.Count];
+                                    string groupName = name.Split('.')[name.Split('.').Length - 1];
                                     group.Add(groupName);
                                     break;
                                 }
