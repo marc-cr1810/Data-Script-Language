@@ -101,6 +101,13 @@ namespace DataScriptLanguage
                                         line += (level > 0 ? Regex.Replace(parts[i], @",(?=(?:[^\""]*\""[^\""]*\"")*[^\""]*$)", "|") : parts[i]);
                                     }
                                 }
+                                else if (parts[i + 1] == "{")
+                                {
+                                    i++;
+                                    string groupName = name.Split('.')[group.Count];
+                                    group.Add(groupName);
+                                    break;
+                                }
                                 else
                                 {
                                     Log.GetCoreLogger().Warn("No value assigned to {1}", path, name);
